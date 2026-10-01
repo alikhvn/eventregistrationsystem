@@ -2,12 +2,10 @@
 
 from flask import Flask, render_template, request
 
-from models import register_participant, seed_events
+from db import get_events, init_db, register_participant
 
 app = Flask(__name__)
-
-# In-memory storage is enough for this lab; data resets on restart.
-events = seed_events()
+init_db()
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -18,18 +16,13 @@ def index():
     if request.method == "POST":
         name = request.form.get("name", "")
         email = request.form.get("email", "")
-        event_id = request.form.get("event_id", "")
-        event = next((e for e in events if e.id == event_id), None)
-
-        if event is None:
-            message, is_error = "Please select an event.", True
-        else:
-            success, message = register_participant(event, name, email)
-            is_error = not success
+        event_id = request.form.get("event_id", type=int)
+        success, message = register_participant(event_id, name, email)
+        is_error = not success
 
     return render_template(
         "index.html",
-        events=events,
+        events=get_events(),
         message=message,
         is_error=is_error,
     )

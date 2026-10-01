@@ -24,17 +24,25 @@ Event Registration System — іс-шараларға (семинарлар, к�
 ## Project structure
 ```
 src/
-  app.py            # Flask application (routes)
-  models.py         # Pure data logic: Event, validation, registration
+  app.py                     # Flask application (routes)
+  db.py                      # SQLite persistence layer (events + registrations)
+  models.py                  # Pure validation logic (name/email)
+  event_registration.db      # SQLite database file, created on first run
   templates/
-    index.html      # Jinja2 page template
+    index.html               # Jinja2 page template
   static/
-    style.css        # Styling
+    style.css                 # Styling
 docs/
-  requirements.md   # Functional requirements
+  requirements.md            # Functional requirements
 tests/
-  test_models.py    # pytest unit tests for validation/registration logic
+  test_models.py             # pytest unit tests for validation logic
+  test_db.py                 # pytest tests for the SQLite registration flow
 ```
+
+## Data storage
+Data is stored in a local SQLite database (`src/event_registration.db`),
+created automatically on first run. It persists across server restarts.
+The database file is excluded from git via `.gitignore`.
 
 ## How to run
 ```bash
